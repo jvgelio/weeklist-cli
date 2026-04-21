@@ -13,7 +13,14 @@ Gerencie sua semana diretamente do terminal. O **Weeklist CLI** permite que voc�
 
 ## 📦 Instalação
 
-Você pode instalar a CLI globalmente usando o npm:
+### 💡 Instalação Ultra-Rápida (via IA)
+Se você usa **Claude Code**, **Gemini CLI** ou **Cursor**, basta colar o comando abaixo no chat:
+> "Instale a CLI do Weeklist para mim: https://github.com/jvgelio/weeklist-cli.git"
+
+---
+
+### Instalação Manual
+Você também pode instalar globalmente usando o npm:
 
 ```bash
 # Via repositório remoto
