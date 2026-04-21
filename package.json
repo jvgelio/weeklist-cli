@@ -1,0 +1,24 @@
+{
+  "name": "@jvgel/weeklist-cli",
+  "version": "1.0.0",
+  "description": "CLI for Weeklist",
+  "type": "module",
+  "bin": {
+    "week": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "jvgel",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "chalk": "^5.3.0",
+    "chrono-node": "^2.7.0",
+    "commander": "^11.1.0",
+    "conf": "^12.0.0",
+    "date-fns": "^3.0.0",
+    "open": "^9.1.0"
+  }
+}
