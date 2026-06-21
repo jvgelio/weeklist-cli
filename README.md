@@ -45,31 +45,102 @@ week login
 
 | Comando | Descrição |
 | :--- | :--- |
-| `week list` | Lista tarefas de hoje. |
-| `week list tomorrow` | Lista tarefas de amanhã ou qualquer data/dia da semana. |
-| `week add "Título"` | Adiciona uma tarefa para hoje. |
+| `week list [date]` | Lista tarefas. Aceita filtros avançados de busca e agrupamentos. |
+| `week add "Título"` | Adiciona uma nova tarefa com data, prioridade, slot, notas e tags. |
+| `week edit <id>` | Modifica propriedades de uma tarefa existente (data, slot, tags, título, notas, etc). |
 | `week done <id>` | Marca uma tarefa como concluída (use o ID curto do `list`). |
 | `week rm <id>` | Remove uma tarefa permanentemente. |
+| `week tag <ls/add/rm>` | Gerencia tags do usuário (listar, adicionar e remover). |
 | `week status` | Verifica se você está logado e qual a conta ativa. |
+
+---
 
 ### 3. Exemplos Avançados
 
-**Adicionar tarefa com data, slot e prioridade:**
+#### Listagem Avançada (`week list`)
+Você pode combinar múltiplos filtros para consultar tarefas:
 ```bash
-week add "Reunião de Projeto" --date monday --slot morning --priority high
+# Listar todas as tarefas ativas do usuário
+week list --all
+
+# Listar tarefas da semana inteira de uma data
+week list monday --week
+
+# Listar apenas tarefas atrasadas (pendentes de dias anteriores)
+week list --overdue
+
+# Filtrar tarefas pendentes com prioridade 'high' e tag 'trabalho'
+week list --pending --priority high --tag trabalho
+
+# Buscar tarefas contendo o texto "reunião"
+week list --search "reunião"
 ```
 
-**Adicionar tarefa recorrente:**
+#### Edição Completa (`week edit`)
+O comando `edit` permite atualizar campos específicos de forma incremental ou substituir propriedades:
 ```bash
-week add "Academia" --recurring daily
+# Alterar o título e mover a tarefa de data/slot
+week edit a1b2c3d4 --title "Reunião Remarcada" --date tomorrow --slot pm
+
+# Adicionar uma tag e remover prioridade
+week edit a1b2c3d4 --add-tag urgente --clear-priority
+
+# Adicionar/atualizar notas e marcar como feita
+week edit a1b2c3d4 --note "Preparar slides antes" --done
+
+# Limpar nota e desmarcar como concluída (voltar a pendente)
+week edit a1b2c3d4 --clear-note --undone
 ```
 
-## 🤖 Uso com Assistentes de IA
+#### Gerenciador de Tags (`week tag`)
+```bash
+# Listar tags do usuário e contagem de tarefas associadas
+week tag list
 
-Se você utiliza ferramentas como **Gemini CLI** ou **Claude Code**, a CLI é a ponte perfeita. Você pode pedir:
-- *"Gemini, adicione uma tarefa para amanhã à tarde chamada 'Estudar MCP'."*
-- *"Claude, liste minhas tarefas de segunda-feira e marque a de 'Limpar casa' como feita."*
+# Criar uma tag customizada com cor (formato oklch, hex, rgb)
+week tag add "Estudos" "oklch(0.65 0.15 200)"
+
+# Remover tag pelo ID/slug
+week tag rm estudos
+```
+
+---
+
+## 🤖 Uso com Assistentes de IA (IA-Ready)
+
+Esta CLI foi desenhada para facilitar a integração com agentes de IA (como Gemini CLI, Claude Code e Cursor).
+
+### Opção Global `--json`
+Passe a flag `-j` ou `--json` antes ou depois de qualquer comando para obter respostas em JSON estruturado bruto, ideal para parsing direto no código:
+```bash
+# Obter o payload JSON completo de todas as tarefas da semana
+week list monday --week --json
+
+# Adicionar tarefa e obter o UUID completo dela imediatamente no retorno
+week add "Tarefa da IA" --json
+
+# Atualizar e obter o estado modificado
+week edit a1b2c3d4 --done --json
+```
+
+### Tratamento de Erros e Exit Codes
+Ao utilizar a flag `--json`, qualquer falha reportará o erro em formato estruturado no canal `stderr`:
+```json
+{
+  "error": "Sessão expirada ou não autenticado. Por favor, faça login com \"week login\".",
+  "code": "UNAUTHORIZED"
+}
+```
+
+A CLI retorna códigos de erro padronizados (`exit codes` do processo):
+- **`0`**: Sucesso.
+- **`1`**: Argumento inválido ou recurso não encontrado (ex: ID inexistente).
+- **`2`**: Sessão expirada ou não autorizado.
+- **`3`**: Falha de rede ou indisponibilidade de API.
+
+---
 
 ## 📄 Licença
 
 Este projeto está sob a licença ISC.
+
