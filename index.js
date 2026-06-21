@@ -110,8 +110,10 @@ program
   .action(async (dateArg) => {
     const bucketKey = getBucketKey(dateArg);
     try {
-      const res = await api.get('/api/tasks');
-      const tasks = res.data.filter(t => t.bucketKey === bucketKey);
+      const isDate = /^\d{4}-\d{2}-\d{2}$/.test(bucketKey);
+      const params = isDate ? { from: bucketKey, to: bucketKey } : { bucket: bucketKey };
+      const res = await api.get('/api/tasks', { params });
+      const tasks = res.data;
       
       if (tasks.length === 0) {
         console.log(chalk.gray(`Nenhuma tarefa encontrada para ${bucketKey}.`));
