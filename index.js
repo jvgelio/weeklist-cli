@@ -11,7 +11,10 @@ import http from 'http';
 const config = new Conf({ projectName: 'weeklist-cli' });
 const program = new Command();
 
-const DEFAULT_API_URL = 'https://weeklist-production.up.railway.app';
+// O Weeklist foi fundido no habit-flow em 2026-08-02. A API mantem o mesmo
+// contrato (mesmas rotas, mesmo cookie session_id), so mudou de casa.
+// Para apontar pra outro host: week config set api_url <url>
+const DEFAULT_API_URL = 'https://habit-flow-production-d97e.up.railway.app';
 const API_URL = config.get('api_url') || DEFAULT_API_URL;
 
 const api = axios.create({
